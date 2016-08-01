@@ -78,7 +78,7 @@ function Return-Pokemons
                 GoogleMaps="https://maps.google.com/maps?q=$($pokemon.latitude),$($pokemon.Longitude)&z=19"
                 Alive=$pokemon.Is_alive;
                 Pokemon=($pokedex | where-object { $_.number -eq $pokemon.pokemonId }).name;
-				Expire_At= $pokemon.expiration_time;
+		Expire_At= $pokemon.expiration_time;
                 Expire_date=(Convert-FromUnixdate $pokemon.expiration_time);
                 uid=$pokemon.uid
             }
@@ -136,7 +136,7 @@ do
                     [void]$sql.Parameters.AddWithValue("@Latitude", $($result.Latitude) );
                     [void]$sql.Parameters.AddWithValue("@Longitude", $($result.Longitude));
                     [void]$sql.Parameters.AddWithValue("@StartRange", (Convert-ToUnixDate -dateTime $($result.Expire_date).AddMinutes(-5)));
-				    [void]$sql.Parameters.AddWithValue("@endRange", (Convert-ToUnixDate -dateTime $($result.Expire_date).AddMinutes(5)));
+                    [void]$sql.Parameters.AddWithValue("@endRange", (Convert-ToUnixDate -dateTime $($result.Expire_date).AddMinutes(5)));
                     $adapter = New-Object -TypeName System.Data.SQLite.SQLiteDataAdapter $sql
                     $data = New-Object System.Data.DataSet
                     [void]$adapter.Fill($data)
@@ -147,7 +147,7 @@ do
                         $expireDate = $($result.Expire_date - (Get-Date))
                         $expireTime = "$($expireDate.Minutes):$($expireDate.Seconds)"
                         $expireDateFormatted = Get-Date $($result.Expire_date) -Format "HH:mm"
-					    PushBullet -title "$($location.name) - $($result.Pokemon) - $expireTime ($expireDateFormatted)" -content "$($result.GoogleMaps)"
+			PushBullet -title "$($location.name) - $($result.Pokemon) - $expireTime ($expireDateFormatted)" -content "$($result.GoogleMaps)"
                         $sql = $conn.CreateCommand()
                         $sql.CommandText = $insertQuery
                         [void]$sql.Parameters.AddWithValue("@Pokemon", $($result.Pokemon));
